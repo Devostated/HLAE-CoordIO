@@ -18,7 +18,7 @@ The download can be found on the [Release](https://github.com/Devostated/HLAE-Co
 * Have the same camera in Blender and After Effects with e.g. [HLAE Camera IO](https://www.advancedfx.org/download/#tools-hlae-camio)
 * Create a plane
 * Place the plane where you want it to be tracked
-* Copy it's location with Shift + F or the sidemenu
+* Copy it's transformation with Shift + F or the sidemenu
 * Paste (CTRL + V) onto the tracked object
 
 https://user-images.githubusercontent.com/30211694/130481805-64a99dc9-2985-4700-99a1-5ec6e9d08e50.mp4
