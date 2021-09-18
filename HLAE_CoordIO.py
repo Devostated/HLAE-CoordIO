@@ -1,7 +1,7 @@
 bl_info = {
     "name": "HLAE CoordIO",
     "author": "Devostated.",
-    "version": (1, 1, 0),
+    "version": (1, 2, 0),
     "blender": (2, 93, 0),
     "operator": "Import-Export",
     "location": "Operator Search",
@@ -9,7 +9,8 @@ bl_info = {
     "tracker_url": "https://github.com/Devostated/HLAE-CoordIO/issues",
     "description": "Exporting transformation data to After Effects."
 }
-import bpy, os
+import bpy
+from math import degrees
 
 class bl2ae_plane(bpy.types.Operator):
     bl_idname = 'bl.plane'
@@ -17,7 +18,8 @@ class bl2ae_plane(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        bpy.ops.mesh.primitive_plane_add(size=2, enter_editmode=False, align='WORLD', rotation=(1.5708, 0, 0))
+        # Create Plane WIP
+        bpy.ops.mesh.primitive_plane_add(size=2, enter_editmode=False, align='WORLD', rotation=(1.5707963, 0, 0))
         return {'FINISHED'}
 
 class bl2ae_coords(bpy.types.Operator):
@@ -26,16 +28,31 @@ class bl2ae_coords(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        X = bpy.context.object.location.y * - 1 * 100
-        Y = bpy.context.object.location.z * - 1 * 100
-        Z = bpy.context.object.location.x * 100
 
+        # Transformation Blender to AE
+        for matrix_world in bpy.context.object:
+            # Location
+            LX = matrix_world.location.x * 100
+            LY = matrix_world.location.z * - 1 * 100
+            LZ = matrix_world.location.y * 100
+
+            # Rotation
+            rot = matrix_world.to_euler('ZYX')
+            RX = degrees(rot[0]) - 90
+            RY = -degrees(rot[1])
+            RZ = -degrees(rot[2])
+
+        # Copy to Clipboard
         copy = bpy.context.window_manager
-        copy.clipboard = "Adobe After Effects 8.0 Keyframe Data"
+        copy.clipboard = "Adobe After Effects 8.0 Keyframe Data\r\n"
         copy.clipboard = copy.clipboard + "\r\n"
         copy.clipboard = copy.clipboard + "Transform\tPosition\r\n"
         copy.clipboard = copy.clipboard + "\tFrame\tX pixels\tY pixels\tZ pixels\t\r\n"
-        copy.clipboard = copy.clipboard + "\t\t{}\t{}\t{}\t".format(X, Y, Z,)
+        copy.clipboard = copy.clipboard + "\t\t{}\t{}\t{}\t\r\n".format(LX, LY, LZ,)
+        copy.clipboard = copy.clipboard + "\r\n"
+        copy.clipboard = copy.clipboard + "Transform\tOrientation\r\n"
+        copy.clipboard = copy.clipboard + "\tFrame\tX degrees\t\r\n"
+        copy.clipboard = copy.clipboard + "\t\t{}\t{}\t{}\t\r\n".format(RX, RY, RZ,)
         copy.clipboard = copy.clipboard + "\r\n"
         copy.clipboard = copy.clipboard + "\r\n"
         copy.clipboard = copy.clipboard + "End of Keyframe Data"
@@ -51,6 +68,7 @@ class coordPanel(bpy.types.Panel):
         self.layout.operator('bl.plane')
         self.layout.operator('bl.coords')
 
+# Hotkey
 addon_keymaps = []
 
 def register():
@@ -58,6 +76,7 @@ def register():
     bpy.utils.register_class(bl2ae_coords)
     bpy.utils.register_class(coordPanel)
 
+    # Hotkey
     wm = bpy.context.window_manager
     kc = wm.keyconfigs.addon
     if kc:
@@ -70,6 +89,7 @@ def unregister():
     bpy.utils.unregister_class(bl2ae_coords)
     bpy.utils.unregister_class(coordPanel)
 
+    # Hotkey
     for km, kmi in addon_keymaps:
         km.keymap_items.remove(kmi)
     addon_keymaps.clear()
