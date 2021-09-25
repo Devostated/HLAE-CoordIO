@@ -1,7 +1,7 @@
 bl_info = {
     "name": "HLAE CoordIO",
     "author": "Devostated.",
-    "version": (1, 2, 0),
+    "version": (1, 3, 0),
     "blender": (2, 93, 0),
     "operator": "Import-Export",
     "location": "Operator Search",
@@ -28,19 +28,18 @@ class bl2ae_coords(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-
         # Transformation Blender to AE
-        for matrix_world in bpy.context.object:
-            # Location
-            LX = matrix_world.location.x * 100
-            LY = matrix_world.location.z * - 1 * 100
-            LZ = matrix_world.location.y * 100
+        # Location
+        loc = bpy.context.object.location
+        LX = loc.x * 100
+        LY = loc.z * - 1 * 100
+        LZ = loc.y * 100
 
-            # Rotation
-            rot = matrix_world.to_euler('ZYX')
-            RX = degrees(rot[0]) - 90
-            RY = -degrees(rot[1])
-            RZ = -degrees(rot[2])
+        # Rotation
+        rot = list(bpy.context.object.matrix_world.to_euler('ZYX'))
+        RX = degrees(rot[0]) - 90
+        RY = -degrees(rot[1])
+        RZ = -degrees(rot[2])
 
         # Copy to Clipboard
         copy = bpy.context.window_manager
