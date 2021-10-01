@@ -5,7 +5,7 @@ HLAE CoordIO allows you to convert Blender coordinates and copy them to After Ef
 
 ## Download
 
-The download can be found on the [Release](https://github.com/Devostated/HLAE-CoordIO/releases) page
+The download can be found on the [Release](https://github.com/Devostated/HLAE-CoordIO/releases) page.
 
 ## Functions
 * Sidepanel (Press N)
