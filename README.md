@@ -9,6 +9,7 @@ The download can be found on the [Release](https://github.com/Devostated/HLAE-Co
 
 ## Functions
 * Sidepanel (Press N)
+  * Swap between Coordinate systems
   * Create an After Effects matching Solid
   * Copy to transformation data to clipboard
 * Hotkey
